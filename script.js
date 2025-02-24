@@ -1,36 +1,5 @@
-document.getElementById("reservationForm").addEventListener("submit", function (event) {
-    event.preventDefault();
-    
-    const formData = new FormData(this);
-    
-    fetch("reservation.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        if (data.status === "success") {
-            document.getElementById("reservationForm").reset();
-        }
-    })
-    .catch(error => console.error("Erreur :", error));
-});
-
-document.getElementById('partnerForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const niveau = document.getElementById('niveau').value;
-    const disponibilites = document.getElementById('disponibilites').value;
-    alert(`Recherche de partenaire de niveau ${niveau} avec les disponibilités: ${disponibilites}.`);
-});
-
-document.getElementById('inscriptionTournoi').addEventListener('click', function() {
-    alert('Inscription au tournoi réussie !');
-});
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
+    const reservationForm = document.getElementById("reservationForm");
     const timeInput = document.getElementById("time");
     const dateInput = document.getElementById("date");
 
@@ -41,51 +10,58 @@ document.addEventListener("DOMContentLoaded", function () {
         "19:00", "20:00", "21:00"
     ];
 
-    // Fonction pour charger les heures dans le select
+    // Charger les créneaux horaires
     function loadTimeSlots(reservedSlots = []) {
         timeInput.innerHTML = '<option value="">Sélectionnez une heure</option>';
 
         hours.forEach(hour => {
-            let option = document.createElement("option");
+            const option = document.createElement("option");
             option.value = hour;
-            option.textContent = hour;
-
-            if (reservedSlots.includes(hour)) {
-                option.disabled = true;
-                option.textContent += " (Réservé)";
-            }
-
+            option.textContent = reservedSlots.includes(hour) ? `${hour} (Réservé)` : hour;
+            option.disabled = reservedSlots.includes(hour);
             timeInput.appendChild(option);
         });
     }
 
-    // Charger les heures au démarrage
+    // Charger les créneaux au chargement de la page
     loadTimeSlots();
 
-    // Vérifier les créneaux réservés quand une date est sélectionnée
-    dateInput.addEventListener("change", function () {
-        const date = this.value;
-        if (!date) return;
+    // Vérifier les créneaux réservés lorsqu'une date est sélectionnée
+    dateInput.addEventListener("change", async function () {
+        if (!this.value) return;
 
-        fetch(`reservation.php?date=${date}`)
-            .then(response => response.json())
-            .then(reservedSlots => {
-                loadTimeSlots(reservedSlots); // Recharger les heures en désactivant celles déjà prises
-            })
-            .catch(error => console.error("Erreur:", error));
+        try {
+            const response = await fetch(`reservation.php?date=${this.value}`);
+            const reservedSlots = await response.json();
+            loadTimeSlots(reservedSlots);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des créneaux réservés :", error);
+        }
+    });
+
+    // Gestion du formulaire de réservation
+    reservationForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(reservationForm);
+
+        try {
+            const response = await fetch("reservation.php", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.status === "success") {
+                alert("Réservation réussie !");
+                reservationForm.reset();
+                loadTimeSlots();
+            } else {
+                alert("Erreur : " + data.message);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la réservation :", error);
+        }
     });
 });
-
-
-
-
-
-fetch(`getReservations.php?date=${date}`)
-    .then(response => response.json())
-    .then(reservedSlots => {
-        console.log("Créneaux réservés:", reservedSlots);
-        loadTimeSlots(reservedSlots);
-    })
-    .catch(error => console.error("Erreur:", error));
-
-

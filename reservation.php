@@ -1,7 +1,4 @@
-<?php
-    // Démarrer la session si besoin
-    session_start();
-?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -51,7 +48,7 @@
     <footer>
         <div class="footer-left">
             <h2>La maison du badminton</h2>
-            <img src="logo.png" alt="Logo de la maison du badminton">
+            <img src="images/logo.png" alt="Logo de la maison du badminton">
         </div>
         <div class="footer-center">
             <ul>
@@ -64,82 +61,69 @@
         <div class="footer-right">
             <h3>Suivez-nous</h3>
             <div class="social-icons">
-                <a href="#"><img src="facebook.png" alt="Facebook"></a>
-                <a href="#"><img src="youtube.png" alt="YouTube"></a>
-                <a href="#"><img src="linkedin.png" alt="LinkedIn"></a>
-                <a href="#"><img src="instagram.png" alt="Instagram"></a>
+                <a href="#"><img src="images/facebook.png" alt="Facebook"></a>
+                <a href="#"><img src="images/youtube.png" alt="YouTube"></a>
+                <a href="#"><img src="images/linkedin.png" alt="LinkedIn"></a>
+                <a href="#"><img src="images/instagram.jfif" alt="Instagram"></a>
             </div>
         </div>
     </footer>
 </body>
 </html>
 
-<?php
-require "config.php";
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $date = $_POST["date"];
-    $heure = $_POST["time"];
-
-    // Vérifier si le créneau est déjà pris
-    $stmt = $pdo->prepare("SELECT * FROM reservations WHERE date_reservation = ? AND heure = ?");
-    $stmt->execute([$date, $heure]);
-    
-    if ($stmt->rowCount() > 0) {
-        echo json_encode(["status" => "error", "message" => "Créneau déjà réservé"]);
-    } else {
-        // Insérer la réservation
-        $stmt = $pdo->prepare("INSERT INTO reservations (date_reservation, heure) VALUES (?, ?)");
-        if ($stmt->execute([$date, $heure])) {
-            echo json_encode(["status" => "success", "message" => "Réservation confirmée !"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Erreur lors de la réservation"]);
-        }
-    }
-}
-?>
-
 
 
 
 <?php
-require "config.php";
+// Connexion à la base de données
+$host = 'localhost'; // Hôte de la base de données (localhost ou IP)
+$dbname = 'badminton_db'; // Nom de ta base de données
+$username = 'root'; // Nom d'utilisateur pour la connexion à la base de données
+$password = ''; // Mot de passe pour la connexion (laisse vide si pas de mot de passe)
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $date = $_POST["date"];
-    $heure = $_POST["time"];
+try {
+    // Connexion à la base de données avec PDO
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Échec de la connexion : " . $e->getMessage());
+}
 
-    // Vérifier si le créneau est déjà pris
-    $stmt = $pdo->prepare("SELECT * FROM reservations WHERE date_reservation = ? AND heure = ?");
-    $stmt->execute([$date, $heure]);
-    
-    if ($stmt->rowCount() > 0) {
-        echo json_encode(["status" => "error", "message" => "Créneau déjà réservé"]);
-    } else {
-        // Insérer la réservation
-        $stmt = $pdo->prepare("INSERT INTO reservations (date_reservation, heure) VALUES (?, ?)");
-        if ($stmt->execute([$date, $heure])) {
-            echo json_encode(["status" => "success", "message" => "Réservation confirmée !"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Erreur lors de la réservation"]);
-        }
+// Vérification si le formulaire a été soumis
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Récupération des données du formulaire
+    $date_reservation = $_POST['date'];
+    $heure = $_POST['time'];
+    $duration = $_POST['duration']; // Récupère la durée
+
+    // Validation des données
+    if (empty($date_reservation) || empty($heure) || empty($duration)) {
+        echo "Tous les champs doivent être remplis.";
+        exit;
     }
+
+    // Préparation de la requête SQL pour insérer les données
+    $sql = "INSERT INTO reservations (date_reservation, heure, duration) VALUES (:date_reservation, :heure, :duration)";
+    $stmt = $pdo->prepare($sql);
+
+    // Liaison des paramètres
+    $stmt->bindParam(':date_reservation', $date_reservation);
+    $stmt->bindParam(':heure', $heure);
+    $stmt->bindParam(':duration', $duration);
+
+    // Exécution de la requête
+    if ($stmt->execute()) {
+        // Confirmation de la réservation
+        echo "Votre réservation a été effectuée avec succès !<br>";
+        echo "Détails de la réservation :<br>";
+        echo "Date : $date_reservation<br>";
+        echo "Heure : $heure<br>";
+        echo "Durée : $duration heure(s)<br>";
+    } else {
+        echo "Une erreur est survenue lors de la réservation.";
+    }
+} else {
+    echo "Veuillez soumettre le formulaire.";
 }
 
-
-
-
-
-
-if (isset($_GET["date"])) {
-    $date = $_GET["date"];
-    $stmt = $pdo->prepare("SELECT heure FROM reservations WHERE date_reservation = ?");
-    $stmt->execute([$date]);
-    
-    $reservedSlots = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    echo json_encode($reservedSlots);
-}
 ?>
-
-
-

@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La maison du badminton</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
-
+    
 </head>
 <body>
 <header>
@@ -73,19 +72,18 @@
 
 
 
+
+
+
+
 <?php
-require "config.php";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $niveau = $_POST["niveau"];
-    $disponibilites = $_POST["disponibilites"];
+// Ajouter cette ligne pour définir le type de contenu en JSON
+header("Content-Type: application/json");
 
-    // Ajouter l'utilisateur à la mise en relation
-    $stmt = $pdo->prepare("INSERT INTO mise_en_relation (niveau, disponibilites) VALUES (?, ?)");
-    if ($stmt->execute([$niveau, $disponibilites])) {
-        echo json_encode(["status" => "success", "message" => "Partenaire trouvé !"]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Erreur lors de la mise en relation"]);
-    }
+// Exemple de retour d'une erreur 404 si la page n'existe pas
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(["status" => "error", "message" => "Méthode non autorisée."]);
+    exit();
 }
 ?>
