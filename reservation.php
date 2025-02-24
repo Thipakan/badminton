@@ -29,19 +29,29 @@
         <section id="reservation">
             <h2>Réserver un Terrain</h2>
             <form id="reservationForm" method="POST" action="traitement_reservation.php">
-                <label for="date">Date :</label>
-                <input type="date" id="date" name="date" required>
-                
-                <label for="time">Heure :</label>
-                <select id="time" name="time" required>
-                    <option value="">Sélectionnez une heure</option>
-                </select>
-                
-                <label for="duration">Durée (heures) :</label>
-                <input type="number" id="duration" name="duration" min="1" max="3" required>
-                
-                <button type="submit">Réserver</button>
-            </form>
+    <label for="name">Nom :</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="surname">Prénom :</label>
+    <input type="text" id="surname" name="surname" required>
+
+    <label for="email">E-mail :</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="date">Date :</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="time">Heure :</label>
+    <select id="time" name="time" required>
+        <option value="">Sélectionnez une heure</option>
+    </select>
+
+    <label for="duration">Durée (heures) :</label>
+    <input type="number" id="duration" name="duration" min="1" max="3" required>
+
+    <button type="submit">Réserver</button>
+</form>
+
         </section>
     </main>
     
@@ -73,49 +83,55 @@
 
 
 
-
 <?php
 // Connexion à la base de données
-$host = 'localhost'; // Hôte de la base de données (localhost ou IP)
-$dbname = 'badminton_db'; // Nom de ta base de données
-$username = 'root'; // Nom d'utilisateur pour la connexion à la base de données
-$password = ''; // Mot de passe pour la connexion (laisse vide si pas de mot de passe)
+$host = 'localhost';
+$dbname = 'badminton_db';
+$username = 'root';
+$password = '';
 
 try {
-    // Connexion à la base de données avec PDO
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Échec de la connexion : " . $e->getMessage());
 }
 
-// Vérification si le formulaire a été soumis
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Récupération des données du formulaire
+    $name = $_POST['name'];
+    $surname = $_POST['surname'];
+    $email = $_POST['email'];
     $date_reservation = $_POST['date'];
     $heure = $_POST['time'];
-    $duration = $_POST['duration']; // Récupère la durée
+    $duration = $_POST['duration'];
 
     // Validation des données
-    if (empty($date_reservation) || empty($heure) || empty($duration)) {
+    if (empty($name) || empty($surname) || empty($email) || empty($date_reservation) || empty($heure) || empty($duration)) {
         echo "Tous les champs doivent être remplis.";
         exit;
     }
 
     // Préparation de la requête SQL pour insérer les données
-    $sql = "INSERT INTO reservations (date_reservation, heure, duration) VALUES (:date_reservation, :heure, :duration)";
+    $sql = "INSERT INTO reservations (name, surname, email, date_reservation, heure, duration) 
+            VALUES (:name, :surname, :email, :date_reservation, :heure, :duration)";
     $stmt = $pdo->prepare($sql);
 
     // Liaison des paramètres
+    $stmt->bindParam(':name', $name);
+    $stmt->bindParam(':surname', $surname);
+    $stmt->bindParam(':email', $email);
     $stmt->bindParam(':date_reservation', $date_reservation);
     $stmt->bindParam(':heure', $heure);
     $stmt->bindParam(':duration', $duration);
 
     // Exécution de la requête
     if ($stmt->execute()) {
-        // Confirmation de la réservation
         echo "Votre réservation a été effectuée avec succès !<br>";
         echo "Détails de la réservation :<br>";
+        echo "Nom : $name<br>";
+        echo "Prénom : $surname<br>";
+        echo "E-mail : $email<br>";
         echo "Date : $date_reservation<br>";
         echo "Heure : $heure<br>";
         echo "Durée : $duration heure(s)<br>";
@@ -125,5 +141,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     echo "Veuillez soumettre le formulaire.";
 }
-
 ?>
