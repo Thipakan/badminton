@@ -21,19 +21,31 @@
         </ul>
     </nav>
 </header>
-
-
+    
     <main>
-        <section class="hero">
-            <h2>Des terrains de Badminton en intérieur</h2>
-            <a href="reservation.php" class="btn">Réserver maintenant</a>
+        <section id="mise-en-relation">
+            <h2>Mise en Relation</h2>
+            <p>Trouve un partenaire de jeu selon ton niveau et tes disponibilités.</p>
+            <form id="partnerForm" method="POST" action="traitement_partenaire.php">
+                <label for="niveau">Niveau de jeu :</label>
+                <select id="niveau" name="niveau">
+                    <option value="débutant">Débutant</option>
+                    <option value="intermédiaire">Intermédiaire</option>
+                    <option value="avancé">Avancé</option>
+                </select>
+                
+                <label for="disponibilites">Disponibilités :</label>
+                <input type="text" id="disponibilites" name="disponibilites" placeholder="Ex : Lun-Dim, 18h-21h" required>
+                
+                <button type="submit">Trouver un Partenaire</button>
+            </form>
         </section>
     </main>
-
+    
     <footer>
         <div class="footer-left">
             <h2>La maison du badminton</h2>
-            <img src="images/logo.png" alt="Logo de la maison du badminton">
+            <img src="logo.png" alt="Logo de la maison du badminton">
         </div>
         <div class="footer-center">
             <ul>
@@ -46,10 +58,10 @@
         <div class="footer-right">
             <h3>Suivez-nous</h3>
             <div class="social-icons">
-                <a href="#"><img src="images/facebook.png" alt="Facebook"></a>
-                <a href="#"><img src="images/youtube.png" alt="YouTube"></a>
-                <a href="#"><img src="images/linkedin.png" alt="LinkedIn"></a>
-                <a href="#"><img src="images/instagram.jfif" alt="Instagram"></a>
+                <a href="#"><img src="facebook.png" alt="Facebook"></a>
+                <a href="#"><img src="youtube.png" alt="YouTube"></a>
+                <a href="#"><img src="linkedin.png" alt="LinkedIn"></a>
+                <a href="#"><img src="instagram.png" alt="Instagram"></a>
             </div>
         </div>
     </footer>
