@@ -3,7 +3,7 @@ document.getElementById("reservationForm").addEventListener("submit", function (
     
     const formData = new FormData(this);
     
-    fetch("reserver.php", {
+    fetch("reservation.php", {
         method: "POST",
         body: formData
     })
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const date = this.value;
         if (!date) return;
 
-        fetch(`getReservations.php?date=${date}`)
+        fetch(`reservation.php?date=${date}`)
             .then(response => response.json())
             .then(reservedSlots => {
                 loadTimeSlots(reservedSlots); // Recharger les heures en désactivant celles déjà prises
@@ -75,4 +75,17 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("Erreur:", error));
     });
 });
+
+
+
+
+
+fetch(`getReservations.php?date=${date}`)
+    .then(response => response.json())
+    .then(reservedSlots => {
+        console.log("Créneaux réservés:", reservedSlots);
+        loadTimeSlots(reservedSlots);
+    })
+    .catch(error => console.error("Erreur:", error));
+
 

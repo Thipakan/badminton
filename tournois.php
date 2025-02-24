@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La maison du badminton</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
+
 </head>
 <body>
 <header>
@@ -71,3 +73,28 @@
     </footer>
 </body>
 </html>
+
+
+
+
+<?php
+require "config.php";
+
+// Afficher les tournois disponibles
+$stmt = $pdo->query("SELECT * FROM tournois");
+$tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Inscription au tournoi
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $id_utilisateur = $_POST["id_utilisateur"];
+    $id_tournoi = $_POST["id_tournoi"];
+
+    // Inscrire l'utilisateur au tournoi
+    $stmt = $pdo->prepare("INSERT INTO inscriptions (id_utilisateur, id_tournoi) VALUES (?, ?)");
+    if ($stmt->execute([$id_utilisateur, $id_tournoi])) {
+        echo json_encode(["status" => "success", "message" => "Inscription au tournoi réussie !"]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Erreur lors de l'inscription"]);
+    }
+}
+?>
