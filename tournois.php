@@ -49,28 +49,28 @@
         </section>
     </main>
     <footer>
-        <div class="footer-left">
-            <h2>La maison du badminton</h2>
-            <img src="logo.png" alt="Logo de la maison du badminton">
+    <div class="footer-left">
+        <h2>La maison du badminton</h2>
+        <img src="images/logo.png" alt="Logo de la maison du badminton">
+    </div>
+    <div class="footer-center">
+        <ul>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">CGU</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+        </ul>
+    </div>
+    <div class="footer-right">
+        <h3>Suivez-nous</h3>
+        <div class="social-icons">
+            <a href="#"><img src="images/facebook.png" alt="Facebook"></a>
+            <a href="#"><img src="images/youtube.png" alt="YouTube"></a>
+            <a href="#"><img src="images/linkedin.png" alt="LinkedIn"></a>
+            <a href="#"><img src="images/instagram.jfif" alt="Instagram"></a>
         </div>
-        <div class="footer-center">
-            <ul>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Mentions légales</a></li>
-                <li><a href="#">CGU</a></li>
-                <li><a href="#">Politique de confidentialité</a></li>
-            </ul>
-        </div>
-        <div class="footer-right">
-            <h3>Suivez-nous</h3>
-            <div class="social-icons">
-                <a href="#"><img src="facebook.png" alt="Facebook"></a>
-                <a href="#"><img src="youtube.png" alt="YouTube"></a>
-                <a href="#"><img src="linkedin.png" alt="LinkedIn"></a>
-                <a href="#"><img src="instagram.png" alt="Instagram"></a>
-            </div>
-        </div>
-    </footer>
+    </div>
+</footer>
 </body>
 </html>
 
