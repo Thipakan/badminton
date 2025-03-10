@@ -7,9 +7,44 @@
     <link rel="stylesheet" href="styles.css">
     <script src="script.js"></script>
     <style>
+        .intro {
+            position: relative;
+            text-align: center;
+            color: white;
+            padding: 150px 20px;
+            background: url('images/badminton-action1.png') no-repeat center center/cover;
+        }
+        .intro::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .intro h2, .intro p, .intro .scroll-btn {
+            position: relative;
+            z-index: 2;
+        }
+        .intro h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .intro p {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .scroll-btn {
+            display: inline-block;
+            background-color: #00ff00;
+            color: black;
+            padding: 10px 20px;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
         .services {
             display: flex;
             flex-direction: column;
+            margin-top: 50px;
         }
         .service {
             position: relative;
@@ -19,7 +54,7 @@
             background-size: cover;
             background-position: center;
         }
-        .service h3, .service p {
+        .service h3, .service p, .service .btn {
             position: relative;
             z-index: 2;
         }
@@ -34,13 +69,13 @@
             border-top: 5px solid white;
         }
         .terrain {
-            background-image: url('images/terrain.jpg');
+            background-image: url('images/terrain.png');
         }
         .partenaire {
-            background-image: url('images/partenaire.jpg');
+            background-image: url('images/partenaire1.png');
         }
         .tournoi {
-            background-image: url('images/tournoi.jpg');
+            background-image: url('images/tournoi.png');
         }
     </style>
 </head>
@@ -60,8 +95,14 @@
     </nav>
 </header>
 
+<section class="intro">
+    <h2>Jouez au badminton dans les meilleures conditions</h2>
+    <p>Réservez un terrain, trouvez un partenaire et participez à nos tournois.</p>
+    <a href="#services" class="scroll-btn">Découvrir nos services</a>
+</section>
+
 <main>
-    <section class="services">
+    <section id="services" class="services">
         <div class="service terrain">
             <h3>Réserver un terrain</h3>
             <p>Choisissez un créneau et profitez d'une salle adaptée à votre niveau.</p>
