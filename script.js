@@ -10,21 +10,19 @@ document.addEventListener("DOMContentLoaded", function () {
         "19:00", "20:00", "21:00"
     ];
 
-    // Charger les créneaux horaires
+    // Fonction pour charger les créneaux horaires avec les créneaux réservés
     function loadTimeSlots(reservedSlots = []) {
         timeInput.innerHTML = '<option value="">Sélectionnez une heure</option>';
 
         hours.forEach(hour => {
+            const isReserved = reservedSlots.includes(hour);
             const option = document.createElement("option");
             option.value = hour;
-            option.textContent = reservedSlots.includes(hour) ? `${hour} (Réservé)` : hour;
-            option.disabled = reservedSlots.includes(hour);
+            option.textContent = isReserved ? `${hour} (Réservé)` : hour;
+            option.disabled = isReserved;
             timeInput.appendChild(option);
         });
     }
-
-    // Charger les créneaux au chargement de la page
-    loadTimeSlots();
 
     // Vérifier les créneaux réservés lorsqu'une date est sélectionnée
     dateInput.addEventListener("change", async function () {
@@ -39,29 +37,36 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Gestion du formulaire de réservation
-    reservationForm.addEventListener("submit", async function (event) {
-        event.preventDefault();
+    // Validation du formulaire avec confirmation de la réservation
+    reservationForm.addEventListener("submit", function (event) {
+        // Récupération des valeurs du formulaire
+        const name = document.getElementById("name").value;
+        const surname = document.getElementById("surname").value;
+        const email = document.getElementById("email").value;
+        const date = document.getElementById("date").value;
+        const time = document.getElementById("time").value;
+        const duration = document.getElementById("duration").value;
 
-        const formData = new FormData(reservationForm);
+        // Vérification que tous les champs sont remplis
+        if (!name || !surname || !email || !date || !time || !duration) {
+            alert("Veuillez remplir tous les champs avant de réserver.");
+            event.preventDefault();
+            return;
+        }
 
-        try {
-            const response = await fetch("reservation.php", {
-                method: "POST",
-                body: formData
-            });
+        // Création du message de confirmation
+        const confirmationMessage = `Confirmez-vous votre réservation ?\n\n` +
+            `👤 Nom : ${name} ${surname}\n📧 Email : ${email}\n📅 Date : ${date}\n🕒 Heure : ${time}\n⏳ Durée : ${duration} heure(s)`;
 
-            const data = await response.json();
+        // Affichage de la boîte de confirmation
+        const isConfirmed = confirm(confirmationMessage);
 
-            if (data.status === "success") {
-                alert("Réservation réussie !");
-                reservationForm.reset();
-                loadTimeSlots();
-            } else {
-                alert("Erreur : " + data.message);
-            }
-        } catch (error) {
-            console.error("Erreur lors de la réservation :", error);
+        // Si l'utilisateur annule, empêcher la soumission
+        if (!isConfirmed) {
+            event.preventDefault();
         }
     });
+
+    // Charger les créneaux horaires dès que la page est prête
+    loadTimeSlots();
 });

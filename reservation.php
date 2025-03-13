@@ -142,3 +142,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo "Veuillez soumettre le formulaire.";
 }
 ?>
+
+
+
+
+
+
+<script>document.addEventListener("DOMContentLoaded", function () {
+    const reservationForm = document.getElementById("reservationForm");
+
+    reservationForm.addEventListener("submit", function (event) {
+        // Récupération des valeurs du formulaire
+        const name = document.getElementById("name").value;
+        const surname = document.getElementById("surname").value;
+        const email = document.getElementById("email").value;
+        const date = document.getElementById("date").value;
+        const time = document.getElementById("time").value;
+        const duration = document.getElementById("duration").value;
+
+        // Vérification que tous les champs sont remplis
+        if (!name || !surname || !email || !date || !time || !duration) {
+            alert("Veuillez remplir tous les champs avant de réserver.");
+            event.preventDefault(); // Bloque l'envoi du formulaire
+            return;
+        }
+
+        // Création du message de confirmation
+        const confirmationMessage = `Confirmez-vous votre réservation ?\n\n` +
+            `👤 Nom : ${name} ${surname}\n📧 Email : ${email}\n📅 Date : ${date}\n🕒 Heure : ${time}\n⏳ Durée : ${duration} heure(s)`;
+
+        // Affichage de la boîte de confirmation
+        const isConfirmed = confirm(confirmationMessage);
+
+        // Si l'utilisateur annule, empêcher la soumission
+        if (!isConfirmed) {
+            event.preventDefault();
+        }
+    });
+});
+</script>
