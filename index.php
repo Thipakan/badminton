@@ -87,7 +87,7 @@
     </div>
     <nav>
         <ul>
-            <li><a href="index.php">Accueil</a></li>
+            <li><a href="index.php">Acceuil</a></li>
             <li><a href="reservation.php">Réserver un Terrain</a></li>
             <li><a href="mise-en-relation.php">Mise en Relation</a></li>
             <li><a href="tournois.php">Tournois</a></li>
