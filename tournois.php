@@ -1,12 +1,77 @@
+<?php
+require "config.php";
+
+// Récupérer les tournois avec leurs descriptions et images
+$stmt = $pdo->query("SELECT * FROM tournois WHERE date_tournoi >= CURDATE() ORDER BY date_tournoi ASC");
+$tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Traitement du formulaire d'inscription (inchangé)
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['email']) && !empty($_POST['niveau']) && !empty($_POST['categories']) && !empty($_POST['id_tournoi'])) {
+        $nom = htmlspecialchars($_POST['nom']);
+        $prenom = htmlspecialchars($_POST['prenom']);
+        $email = htmlspecialchars($_POST['email']);
+        $niveau = htmlspecialchars($_POST['niveau']);
+        $categories = $_POST['categories']; 
+        $id_tournoi = intval($_POST['id_tournoi']);
+
+        // Récupérer les inscriptions actuelles
+        $stmt = $pdo->prepare("SELECT nom_tournoi, inscrits FROM tournois WHERE id = ?");
+        $stmt->execute([$id_tournoi]);
+        $tournoi = $stmt->fetch(PDO::FETCH_ASSOC);
+        $nomTournoi = $tournoi['nom_tournoi'];
+
+        // Décoder les inscriptions existantes
+        $inscriptions = !empty($tournoi['inscrits']) ? json_decode($tournoi['inscrits'], true) : [];
+
+        // Vérifier si l'email est déjà inscrit
+        $alreadyRegistered = false;
+        foreach ($inscriptions as $inscrit) {
+            if ($inscrit['email'] === $email) {
+                $alreadyRegistered = true;
+                break;
+            }
+        }
+
+        if ($alreadyRegistered) {
+            $message = "Vous êtes déjà inscrit à ce tournoi !";
+        } else {
+            // Ajouter la nouvelle inscription
+            $inscriptions[] = [
+                "nom" => $nom,
+                "prenom" => $prenom,
+                "email" => $email,
+                "niveau" => $niveau,
+                "categories" => $categories,
+                "tournoi" => $nomTournoi
+            ];
+
+            // Encoder en JSON et mettre à jour la BDD
+            $stmt = $pdo->prepare("UPDATE tournois SET inscrits = ? WHERE id = ?");
+            $stmt->execute([json_encode($inscriptions), $id_tournoi]);
+
+            $message = "Inscription réussie à $nomTournoi !";
+        }
+    } else {
+        $message = "Veuillez remplir tous les champs.";
+    }
+}
+?>
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La maison du badminton</title>
+    <title>Tournois - La maison du badminton</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js"></script>
-
 </head>
 <body>
 <header>
@@ -24,31 +89,73 @@
     </nav>
 </header>
 <body>
+    <header>
+        <h1>Prochains Tournois</h1>
+    </header>
     <main>
-        <section id="tournoi">
-            <h2>Participer au tournoi</h2>
-            <form id="tournoiForm">
-                <label for="nom">Nom</label>
-                <input type="text" id="nom" name="nom" required>
+        <?php if (!empty($tournois)) : ?>
+            <?php foreach ($tournois as $tournoi) : ?>
+                <section class="tournoi">
+                    <h2><?= htmlspecialchars($tournoi['nom_tournoi']) ?></h2>
+                    <?php if (!empty($tournoi['image'])) : ?>
+                        <img src="<?= htmlspecialchars($tournoi['image']) ?>" alt="Image du tournoi" class="tournoi-image">
+                    <?php endif; ?>
+                    <p><strong>Date :</strong> <?= htmlspecialchars($tournoi['date_tournoi']) ?></p>
+                    <?php if (!empty($tournoi['description'])) : ?>
+                        <p><strong>Description :</strong> <?= nl2br(htmlspecialchars($tournoi['description'])) ?></p>
+                    <?php endif; ?>
+                    
+                    <form method="POST">
+                        <input type="hidden" name="id_tournoi" value="<?= $tournoi['id'] ?>">
+                        <input type="text" name="nom" placeholder="Nom" required>
+                        <input type="text" name="prenom" placeholder="Prénom" required>
+                        <input type="email" name="email" placeholder="Email" required>
+                        <select name="niveau" required>
+                            <option value="débutant">Débutant</option>
+                            <option value="intermédiaire">Intermédiaire</option>
+                            <option value="avancé">Avancé</option>
+                        </select>
+                        <fieldset>
+                            <legend>Catégories</legend>
+                            <label><input type="checkbox" name="categories[]" value="Simple"> Simple</label>
+                            <label><input type="checkbox" name="categories[]" value="Double Hommes"> Double Hommes</label>
+                            <label><input type="checkbox" name="categories[]" value="Double Femmes"> Double Femmes</label>
+                            <label><input type="checkbox" name="categories[]" value="Mixte"> Mixte</label>
+                        </fieldset>
+                        <button type="submit">S'inscrire</button>
+                    </form>
+                </section>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <p>Aucun tournoi à venir.</p>
+        <?php endif; ?>
 
-                <label for="prenom">Prénom</label>
-                <input type="text" id="prenom" name="prenom" required>
-
-                <label for="email">Adresse e-mail</label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="niveau">Niveau en badminton</label>
-                <select id="niveau" name="niveau" required>
-                    <option value="débutant">Débutant</option>
-                    <option value="intermédiaire">Intermédiaire</option>
-                    <option value="avancé">Avancé</option>
-                </select>
-
-                <button type="submit">Confirmer</button>
-            </form>
-        </section>
+        <?php if (isset($message)) : ?>
+            <p><?= htmlspecialchars($message) ?></p>
+        <?php endif; ?>
     </main>
-    <footer>
+
+    <style>
+        .tournoi {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        .tournoi h2 {
+            margin-top: 0;
+        }
+        .tournoi-image {
+            width: 100%;
+            max-width: 500px;
+            display: block;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+    </style>
+</body>
+<footer>
     <div class="footer-left">
         <h2>La maison du badminton</h2>
         <img src="images/logo.png" alt="Logo de la maison du badminton">
@@ -71,30 +178,4 @@
         </div>
     </div>
 </footer>
-</body>
 </html>
-
-
-
-
-<?php
-require "config.php";
-
-// Afficher les tournois disponibles
-$stmt = $pdo->query("SELECT * FROM tournois");
-$tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Inscription au tournoi
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $id_utilisateur = $_POST["id_utilisateur"];
-    $id_tournoi = $_POST["id_tournoi"];
-
-    // Inscrire l'utilisateur au tournoi
-    $stmt = $pdo->prepare("INSERT INTO inscriptions (id_utilisateur, id_tournoi) VALUES (?, ?)");
-    if ($stmt->execute([$id_utilisateur, $id_tournoi])) {
-        echo json_encode(["status" => "success", "message" => "Inscription au tournoi réussie !"]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Erreur lors de l'inscription"]);
-    }
-}
-?>

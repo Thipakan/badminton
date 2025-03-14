@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 24 fév. 2025 à 15:27
+-- Généré le : ven. 14 mars 2025 à 16:47
 -- Version du serveur : 8.0.31
 -- Version de PHP : 8.2.0
 
@@ -35,7 +35,15 @@ CREATE TABLE IF NOT EXISTS `inscriptions` (
   PRIMARY KEY (`id`),
   KEY `id_utilisateur` (`id_utilisateur`),
   KEY `id_tournoi` (`id_tournoi`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `inscriptions`
+--
+
+INSERT INTO `inscriptions` (`id`, `id_utilisateur`, `id_tournoi`) VALUES
+(1, 5, 1),
+(2, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -53,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `reservations` (
   `surname` varchar(200) NOT NULL,
   `email` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=145 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -66,8 +74,18 @@ CREATE TABLE IF NOT EXISTS `tournois` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nom_tournoi` varchar(100) NOT NULL,
   `date_tournoi` date NOT NULL,
+  `inscrits` text,
+  `description` text,
+  `image` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `tournois`
+--
+
+INSERT INTO `tournois` (`id`, `nom_tournoi`, `date_tournoi`, `inscrits`, `description`, `image`) VALUES
+(1, 'Badminton Summer Challenge', '2025-06-21', NULL, 'Rejoignez-nous pour le Badminton Summer Challenge, un tournoi excitant qui marque le début de l’été ! Que vous soyez amateur ou compétiteur, venez défier les meilleurs joueurs dans une ambiance conviviale et dynamique. Ce tournoi se déroulera sur deux jours et offrira des matchs pour tous les niveaux, avec des récompenses et des moments de partage entre passionnés de badminton. Profitez de l’été pour affronter vos adversaires dans une compétition pleine de fun et de fair-play !', NULL);
 
 -- --------------------------------------------------------
 
@@ -82,9 +100,18 @@ CREATE TABLE IF NOT EXISTS `utilisateurs` (
   `prenom` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `niveau` enum('débutant','intermédiaire','avancé') NOT NULL,
+  `disponibilites` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `utilisateurs`
+--
+
+INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `niveau`, `disponibilites`) VALUES
+(5, 'Sriranjan', 'Thipakan', 'thipakan12@hotmail.fr', 'intermédiaire', ''),
+(6, 'Sriranj', 'Thipakn', 'thipakannn12@hotmail.fr', 'débutant', '');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
