@@ -107,12 +107,7 @@ CREATE TABLE IF NOT EXISTS `utilisateurs` (
 
 --
 -- Déchargement des données de la table `utilisateurs`
---
-
-INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `niveau`, `disponibilites`) VALUES
-(5, 'Sriranjan', 'Thipakan', 'thipakan12@hotmail.fr', 'intermédiaire', ''),
-(6, 'Sriranj', 'Thipakn', 'thipakannn12@hotmail.fr', 'débutant', '');
-COMMIT;
+-
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
