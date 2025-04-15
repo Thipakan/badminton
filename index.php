@@ -54,6 +54,7 @@
             background-size: cover;
             background-position: center;
         }
+        
         .service h3, .service p, .service .btn {
             position: relative;
             z-index: 2;
@@ -68,6 +69,32 @@
         .service + .service {
             border-top: 25px solid white;
         }
+
+        
+        .service {
+            position: relative;
+            color: white;
+            text-align: center;
+            padding: 150px 20px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .service h3, .service p, .service .btn {
+            position: relative;
+            z-index: 2;
+        }
+        .service::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .service + .service {
+            border-top: 25px solid white;
+        }
+        
         .terrain {
             background-image: url('images/terrain.png');
         }
@@ -76,6 +103,9 @@
         }
         .tournoi {
             background-image: url('images/tournoi.png');
+        }
+        .tarif {
+            background-image: url('images/tarif.png');
         }
     </style>
 </head>
@@ -108,6 +138,18 @@
             <p>Choisissez un créneau et profitez d'une salle adaptée à votre niveau.</p>
             <a href="reservation.php" class="btn">Voir les disponibilités</a>
         </div>
+        <div class="service tarif" /*style="background-color: #333;*/">
+        <h3 style="color: #ffffff;">
+    💰 <strong>18€</strong> par réservation<br>
+    <span style="font-weight: normal;">(inclut la location du terrain + raquettes)</span>
+</h3>
+<h3 style="color: #ffffff;">
+    🕊️ <strong>1€</strong> par volant<br>
+    <span style="font-weight: normal;">(location)</span>
+</h3>
+
+</div>
+
         <div class="service partenaire">
             <h3>Trouvez un partenaire</h3>
             <p>Nous vous aidons à trouver le partenaire idéal selon votre niveau.</p>
