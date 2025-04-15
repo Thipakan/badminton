@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $placesPrises = count($inscriptions);
                 $complet = $placesPrises >= $tournoi['places_max'];
             ?>
-            <section class="tournoi">
+            <section class="tournoi-info">
                 <h2><?= htmlspecialchars($tournoi['nom_tournoi']) ?></h2>
                 <?php if (!empty($tournoi['image'])) : ?>
                     <img src="<?= htmlspecialchars($tournoi['image']) ?>" alt="Image du tournoi" class="tournoi-image">

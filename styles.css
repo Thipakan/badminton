@@ -164,3 +164,56 @@ footer {
 button:hover {
     background: #45a049;
 }
+
+#reservation {
+    position: relative;
+    background-image: url('images/reserv-terrain.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    overflow: hidden;
+}
+
+#mise-en-relation {
+    position: relative;
+    background-image: url('images/partenaire-relation.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    overflow: hidden;
+}
+
+#reservation::before,
+#mise-en-relation::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 0.5 = 50% d’opacité */
+    z-index: 2;
+}
+
+#reservation>*,
+#mise-en-relation>* {
+    position: relative;
+    z-index: 3;
+}
+
+#reservation,
+#mise-en-relation {
+    color: white;
+}
+
+#reservationForm,
+#partnerForm {
+    width: 50%;
+    margin: auto;
+}
+
+.tournoi-info {
+    width: 85%;
+    margin:auto;
+    margin-bottom: 10px;
+}

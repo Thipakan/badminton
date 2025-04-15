@@ -44,7 +44,7 @@
         .services {
             display: flex;
             flex-direction: column;
-            margin-top: 50px;
+            margin-top: 5px;
         }
         .service {
             position: relative;
@@ -66,7 +66,7 @@
             z-index: 1;
         }
         .service + .service {
-            border-top: 5px solid white;
+            border-top: 25px solid white;
         }
         .terrain {
             background-image: url('images/terrain.png');
